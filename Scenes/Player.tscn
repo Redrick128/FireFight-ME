@@ -1,26 +1,28 @@
 [gd_scene format=3 uid="uid://x5y8yt60w57o"]
 
 [ext_resource type="Script" uid="uid://bvc5u27l4hb2x" path="res://Scripts/Player.gd" id="1_rpqav"]
+[ext_resource type="Script" uid="uid://bsvjgagk37h1o" path="res://Scripts/GunClass.gd" id="2_kyqiw"]
+[ext_resource type="PackedScene" uid="uid://cm8xwvsqmf1xc" path="res://Models/Weaponry/Sofian Army/AKS-74/source/AKS-74.blend" id="3_gntrk"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_gntrk"]
+points = PackedVector3Array(0.4704889, 0.53101945, 0.07200072, -0.48323599, -0.47569403, -0.086753584, -0.48498404, -0.4773947, 0.07190285, 0.36591053, -0.72033507, 0.045628723, 0.07199739, 0.47738385, -0.48497292, -0.16540119, 0.55303043, 0.4400843, 0.15082641, -0.47505718, 0.46743476, -0.37849623, 0.68898535, -0.11349365, 0.22894101, -0.49902883, -0.42770335, -0.24409482, -0.55240524, -0.40196422, -0.11572851, -0.86393136, 0.07308473, 0.1268986, 0.8627875, -0.06166459, -0.26950866, -0.4717917, 0.41185564, 0.22847225, 0.55053824, 0.41192, 0.4402379, 0.47406614, -0.21808207, -0.45744747, 0.47644144, 0.17761432, -0.37311107, 0.4702917, -0.3208723, 0.49664786, -0.39782566, 0.045408025, 0.4105297, -0.41777635, 0.2799746, 0.09951653, -0.80504173, -0.24925292, -0.14121434, 0.80214554, 0.2328386, 0.44026977, -0.47393587, -0.21809848, 0.07254066, 0.77546877, -0.30178395, 0.045714665, -0.746883, 0.33905095, -0.08675379, -0.47569495, -0.48323694, -0.48323694, 0.47569495, -0.08675377, -0.16540061, 0.50023353, -0.455075, -0.27530253, -0.77615684, -0.14143421, -0.06036421, 0.39656404, 0.49488658, 0.2820985, 0.47394592, -0.40237686, 0.17883545, 0.7726684, 0.25873753, -0.32635304, -0.71740067, 0.17829305)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_kyqiw"]
-height = 1.85
+height = 1.77
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_kyqiw"]
-points = PackedVector3Array(0.45731953, 0.61070174, 0.06855109, -0.48354548, -0.5239793, -0.069596216, -0.48371717, -0.5241657, 0.06812784, 0.4275114, -0.66321564, 0.09586843, 0.06812786, 0.5241657, -0.48371717, -0.20732917, 0.5785799, 0.42624772, 0.23125577, -0.54613966, -0.4240968, 0.09612075, -0.49866655, 0.48406318, -0.40207708, 0.6918157, -0.12519914, -0.26067588, -0.5746445, -0.3975547, -0.12745288, -0.90170777, 0.06958326, 0.12598038, 0.9018378, -0.071084246, 0.31307015, 0.5458762, 0.36768767, 0.4223775, 0.4640398, -0.26008427, -0.2880695, -0.5198182, 0.39599198, -0.45193267, 0.4648104, 0.20430356, -0.28748706, 0.5187643, -0.39677492, 0.47990108, -0.46685308, -0.12435522, 0.15225765, -0.83540833, -0.23743165, -0.15398364, 0.8356442, 0.23600648, 0.42114344, -0.48997363, 0.25774074, 0.12488802, -0.8102264, 0.29249546, -0.09736448, -0.49689856, -0.4839315, -0.48228243, 0.44021827, -0.12446503, -0.15385059, 0.83491844, -0.23729289, 0.068299785, 0.5254731, 0.4833344, 0.1805003, 0.80893785, 0.26412296, 0.23464568, 0.7757998, -0.26395413, -0.26529628, -0.8076736, -0.1817089, -0.42286184, -0.46293262, -0.2594656, -0.09764208, -0.49832693, 0.48373294, -0.26393923, -0.77575594, 0.23472726)
-
-[node name="Player" type="CharacterBody3D" unique_id=957666492 node_paths=PackedStringArray("CollisionShape", "TEMP_FPS_LABEL", "AMMO_LABEL", "TEMP_BLOOD_AMMO_LABEL")]
+[node name="Player" type="CharacterBody3D" unique_id=957666492 node_paths=PackedStringArray("CollisionShape", "TEMP_FPS_LABEL", "AMMO_LABEL", "FIRE_MODE", "TEMP_BLOOD_AMMO_LABEL")]
 script = ExtResource("1_rpqav")
 CollisionShape = NodePath("CollisionShape3D")
 TEMP_FPS_LABEL = NodePath("CanvasLayer/VBoxContainer/TEMP_FPS_LABEL")
 AMMO_LABEL = NodePath("CanvasLayer/VBoxContainer/AMMO_LABEL")
+FIRE_MODE = NodePath("CanvasLayer/VBoxContainer/FIRE_MODE")
 TEMP_BLOOD_AMMO_LABEL = NodePath("CanvasLayer/VBoxContainer/TEMP_BLOOD_AMOUNT_LABEL")
-MaxAmmoCount = 5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1402343063]
+shape = SubResource("ConvexPolygonShape3D_gntrk")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1123935769]
 mesh = SubResource("CapsuleMesh_kyqiw")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1084581753]
-shape = SubResource("ConvexPolygonShape3D_kyqiw")
 
 [node name="Head" type="Node3D" parent="." unique_id=278424816]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36553645, 0)
@@ -28,6 +30,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36553645, 0)
 [node name="Camera3D" type="Camera3D" parent="Head" unique_id=2120411159]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14781177, -0.17913902, -0.3791473)
 current = true
+
+[node name="R_Hand" type="CSGBox3D" parent="Head/Camera3D" unique_id=213128453]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09858158, -0.18005499, -0.3341087)
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="AKS-74" parent="Head/Camera3D/R_Hand" unique_id=197663324 node_paths=PackedStringArray("AmmoSpawn") instance=ExtResource("3_gntrk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.010476202, 0.1079573)
+script = ExtResource("2_kyqiw")
+AmmoSpawn = NodePath("AmmoSpawn")
+
+[node name="AmmoSpawn" type="Node3D" parent="Head/Camera3D/R_Hand/AKS-74" unique_id=981244809]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07908632, -0.68407077)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=248570141]
 
@@ -45,6 +59,13 @@ metadata/_edit_use_anchors_ = true
 [node name="AMMO_LABEL" type="Label" parent="CanvasLayer/VBoxContainer" unique_id=330851415]
 layout_mode = 2
 text = "AMMO :"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="FIRE_MODE" type="Label" parent="CanvasLayer/VBoxContainer" unique_id=1335806139]
+layout_mode = 2
+text = "FIRE MODE :"
 horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true

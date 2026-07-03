@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://d3gpckgxuvp4n"]
+
+[ext_resource type="Script" uid="uid://bhd7yxkk8kney" path="res://Scenes/BulletScript.gd" id="1_jtqic"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jtqic"]
+albedo_color = Color(1, 0, 1, 1)
+
+[node name="Bullet" type="Node3D" unique_id=1557003049]
+script = ExtResource("1_jtqic")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=921394689]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_jtqic")
+radius = 0.005
+height = 0.026

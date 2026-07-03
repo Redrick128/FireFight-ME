@@ -44,3 +44,10 @@ shape = SubResource("ConcavePolygonShape3D_kvjmi")
 
 [node name="Player" parent="." unique_id=957666492 instance=ExtResource("1_kvjmi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="AKS-74" parent="Player/Head/Camera3D/R_Hand" parent_id_path=PackedInt32Array(957666492, 213128453) index="0" unique_id=197663324 node_paths=PackedStringArray("Bulletstorage")]
+Bulletstorage = NodePath("../../../../../BulletStorage")
+
+[node name="BulletStorage" type="Node3D" parent="." unique_id=1401762171]
+
+[editable path="Player"]

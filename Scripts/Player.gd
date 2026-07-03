@@ -22,7 +22,7 @@ var p_Is_mouse_visible : bool = false
 
 @onready var head = $Head
 @onready var camera = $Head/Camera3D
-@export var gun : Node3D
+
 @export var CollisionShape : CollisionShape3D
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -31,6 +31,7 @@ var gravity = 9.8
 @export_category("UI")
 @export var TEMP_FPS_LABEL 		  : Label
 @export var AMMO_LABEL     		  : Label
+@export var FIRE_MODE      		  : Label
 @export var TEMP_BLOOD_AMMO_LABEL : Label
 
 # health
@@ -40,16 +41,8 @@ var gravity = 9.8
 
 @export_category("Gun")
 # gunz
-@export var AmmoSpawn : 	Node3D
-@export var BulletStorage : Node3D
-const BULLET_SCENE = ""
-@export var AmmoCount : 	int = 5
-@export var MaxAmmoCount :  int
-@export var HandSlot : 		int = 0
 
-@export_category("Melee")
-# Melee
-@export var MeleeWeapon : 	Node3D
+@onready var aks_74: GunClass = $"Head/Camera3D/R_Hand/AKS-74"
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -69,7 +62,18 @@ func _physics_process(delta):
 	
 	TEMP_BLOOD_AMMO_LABEL.text = "BLOOD : " + str(PlayerBloodAmount)
 	
-	AMMO_LABEL.text = "Ammo : " + str(AmmoCount) + "/5"
+	AMMO_LABEL.text = "Ammo : " + str(GlobalPlayerScript.AmmoCount) + "/30"
+	
+	#-- FIRE MODE CODE ------------------------#
+	
+	var FM : String = "ERR: NULL STR"
+	
+	if GlobalPlayerScript.FireMode == 1:
+		FM = "Semi"
+	elif GlobalPlayerScript.FireMode == 2:
+		FM = "Auto"
+	
+	FIRE_MODE.text = "FIRE MODE : " + str(FM)
 	
 	#------------------------------------------#
 	
@@ -115,6 +119,14 @@ func _physics_process(delta):
 	
 	move_and_slide()
 	
+	if Input.is_action_just_pressed("LMB") and GlobalPlayerScript.FireMode == 1 and GlobalPlayerScript.AmmoCount > 0:
+		aks_74.Shoot()
+	
+	if Input.is_action_pressed("LMB") and GlobalPlayerScript.FireMode == 2 and GlobalPlayerScript.AmmoCount > 0:
+		if GlobalPlayerScript.AutoTimer >= 0.092:
+			aks_74.Shoot()
+			GlobalPlayerScript.AmmoCount = GlobalPlayerScript.AmmoCount - 1
+			GlobalPlayerScript.AutoTimer = 0
 	
 	if Input.is_action_just_pressed("Escape"):
 		get_tree().quit()
@@ -133,11 +145,9 @@ func _physics_process(delta):
 	
 ## BUFFER OF DOOOOM ##
 
-var has_shot = false
-var mode_is = 2
+# Modular gun logic
 
-func Shoot():
-	pass
+
 
 func _headbob(time) -> Vector3:
 	var pos = Vector3.ZERO
