@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 GlobalPlayerScript="*uid://u1augn3h1dl8"
 
+[display]
+
+window/vsync/vsync_mode=2
+
 [editor]
 
 version_control/plugin_name="GitPlugin"
@@ -82,4 +86,5 @@ RMB={
 
 [rendering]
 
+rendering_device/vsync/swapchain_image_count=2
 rendering_device/driver.windows="d3d12"

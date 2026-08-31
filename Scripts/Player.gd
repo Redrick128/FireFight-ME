@@ -37,15 +37,45 @@ var gravity = 9.8
 # health
 @export_category("health")
 @export var PlayerBloodAmount : float = 5.7 # In liters yes its weird.
-@export var is_bleeding = 		false
+@export var bleeding_rate : float = 0.06
+@export var is_bleeding   : bool = false
 
 @export_category("Gun")
 # gunz
-
-@onready var aks_74: GunClass = $"Head/Camera3D/R_Hand/AKS-74"
+@export var GunObj : GunClass
 
 func _ready():
+	
+	Engine.max_fps = 60
+	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
+	GlobalPlayerScript.Primary_Cast = $"Head/Camera3D/R_Hand/AKS-74/RayCast3D"
+
+func _input(event: InputEvent) -> void:
+	
+	if GlobalPlayerScript.MenuFocus == 0:
+		pass
+	
+	elif Input.is_action_pressed("LMB") and GlobalPlayerScript.PrimaryFireMode == 1 and GlobalPlayerScript.Primary_Has_Fired == false and GlobalPlayerScript.PrimaryAmmoCount > 0:
+		GunObj.Shoot()
+		GlobalPlayerScript.Primary_Has_Fired = true
+		GlobalPlayerScript.PrimaryAmmoCount = GlobalPlayerScript.PrimaryAmmoCount - 1
+	if Input.is_action_just_released("LMB") and GlobalPlayerScript.PrimaryFireMode == 1 and GlobalPlayerScript.Primary_Has_Fired == true:
+		await get_tree().create_timer(0.35).timeout
+		GlobalPlayerScript.Primary_Has_Fired = false
+
+
+	if Input.is_action_just_pressed("Escape"):
+		get_tree().quit()
+		
+	if Input.is_action_just_pressed("1"):
+		p_Is_mouse_visible = !p_Is_mouse_visible  # flip the boolean
+		Input.set_mouse_mode(
+			Input.MOUSE_MODE_VISIBLE if p_Is_mouse_visible else Input.MOUSE_MODE_CAPTURED)
+		if GlobalPlayerScript.MenuFocus == 0:
+			GlobalPlayerScript.MenuFocus = 1
+		else: GlobalPlayerScript.MenuFocus = 0
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion and not p_Is_mouse_visible:
@@ -55,22 +85,26 @@ func _unhandled_input(event):
 
 
 func _physics_process(delta):
+	# Funny
+	#Engine.max_fps = GlobalPlayerScript.PrimaryAmmoCount
+	
+	
 	# Rendering 2D
 	#-----------------------------------------#
 	var FPS = Engine.get_frames_per_second()
-	TEMP_FPS_LABEL.text = "FPS : " + str(FPS)
+	TEMP_FPS_LABEL.text = "FPS : " + str(FPS) + "/" + str(Engine.max_fps)
 	
 	TEMP_BLOOD_AMMO_LABEL.text = "BLOOD : " + str(PlayerBloodAmount)
 	
-	AMMO_LABEL.text = "Ammo : " + str(GlobalPlayerScript.AmmoCount) + "/30"
+	AMMO_LABEL.text = "Ammo : " + str(GlobalPlayerScript.PrimaryAmmoCount) + "/30"
 	
 	#-- FIRE MODE CODE ------------------------#
 	
 	var FM : String = "ERR: NULL STR"
 	
-	if GlobalPlayerScript.FireMode == 1:
+	if GlobalPlayerScript.PrimaryFireMode == 1:
 		FM = "Semi"
-	elif GlobalPlayerScript.FireMode == 2:
+	elif GlobalPlayerScript.PrimaryFireMode == 2:
 		FM = "Auto"
 	
 	FIRE_MODE.text = "FIRE MODE : " + str(FM)
@@ -81,29 +115,39 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
-	# Handle Jump.
-	if Input.is_action_just_pressed("Space") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-	
-	# Handle Sprint.
-	if Input.is_action_pressed("Shift"):
-		speed = SPRINT_SPEED
-		if Input.is_action_just_pressed("S") and speed == SPRINT_SPEED:
-			print("tripped") # wil make next year - Redrick 11/29/2025 # Pagod ko next year naman - Redrick 1/19/2026
-	else:
-		speed = WALK_SPEED
+	if GlobalPlayerScript.MenuFocus == 0:
+
+
+		if Input.is_action_pressed("LMB") and GlobalPlayerScript.PrimaryFireMode == 2 and GlobalPlayerScript.PrimaryAmmoCount > 0:
+			if GlobalPlayerScript.PrimaryAutoTimer >= 0.092:
+				GunObj.Shoot()
+				GlobalPlayerScript.PrimaryAmmoCount = GlobalPlayerScript.PrimaryAmmoCount - 1
+				GlobalPlayerScript.PrimaryAutoTimer = 0
+
+		# Handle Jump.
+		if Input.is_action_just_pressed("Space") and is_on_floor():
+			velocity.y = JUMP_VELOCITY
+		
+		# Handle Sprint.
+		if Input.is_action_pressed("Shift"):
+			speed = SPRINT_SPEED
+			if Input.is_action_just_pressed("S") and speed == SPRINT_SPEED:
+				print("tripped") # wil make next year - Redrick 11/29/2025 # Pagod ko next year naman - 
+								 # Redrick 1/19/2026 # Tamad at Pagod pa ko - Redrick 7/5/2026
+		else:
+			speed = WALK_SPEED
 
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Input.get_vector("A", "D", "W", "S")
 	var direction = (head.transform.basis * transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if is_on_floor():
+	if is_on_floor() and GlobalPlayerScript.MenuFocus == 0:
 		if direction:
 			velocity.x = direction.x * speed
 			velocity.z = direction.z * speed
 		else:
 			velocity.x = lerp(velocity.x, direction.x * speed, delta * 7.0)
 			velocity.z = lerp(velocity.z, direction.z * speed, delta * 7.0)
-	else:
+	elif GlobalPlayerScript.MenuFocus == 0:
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 3.0)
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 3.0)
 	
@@ -119,29 +163,17 @@ func _physics_process(delta):
 	
 	move_and_slide()
 	
-	if Input.is_action_just_pressed("LMB") and GlobalPlayerScript.FireMode == 1 and GlobalPlayerScript.AmmoCount > 0:
-		aks_74.Shoot()
-	
-	if Input.is_action_pressed("LMB") and GlobalPlayerScript.FireMode == 2 and GlobalPlayerScript.AmmoCount > 0:
-		if GlobalPlayerScript.AutoTimer >= 0.092:
-			aks_74.Shoot()
-			GlobalPlayerScript.AmmoCount = GlobalPlayerScript.AmmoCount - 1
-			GlobalPlayerScript.AutoTimer = 0
-	
-	if Input.is_action_just_pressed("Escape"):
-		get_tree().quit()
-		
-	if Input.is_action_just_pressed("1"):
-		p_Is_mouse_visible = !p_Is_mouse_visible  # flip the boolean
-		Input.set_mouse_mode(
-			Input.MOUSE_MODE_VISIBLE if p_Is_mouse_visible else Input.MOUSE_MODE_CAPTURED)
 	# Pain incoming
 	# DA Health And player punishment system
 	# March 1 2026 - great now i have to make HEALTH
 	## How much blood does the player have in their body. Yes its needed.
 	
-	if is_bleeding:
-		PlayerBloodAmount = PlayerBloodAmount - 0.06 * delta
+	# July 5 2026 - So im gonna leave this for 5 more years because
+	# Guns dont even do much yet and i want to finnish those first.
+	# And also because im lazy and researching anatomy is boring.
+	
+	if is_bleeding and bleeding_rate > 0.0:
+		PlayerBloodAmount = PlayerBloodAmount - bleeding_rate * delta
 	
 ## BUFFER OF DOOOOM ##
 

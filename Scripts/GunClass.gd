@@ -37,4 +37,4 @@ func Shoot():
 	Bullet.global_position = AmmoSpawn.global_position
 	Bullet.global_transform.basis = AmmoSpawn.global_transform.basis
 	
-	Bullet.Velocity.z = GlobalPlayerScript.AmmoVelocity
+	Bullet.Velocity = AmmoSpawn.global_transform.basis * Vector3(0, 0, GlobalPlayerScript.PrimaryAmmoVelocity)

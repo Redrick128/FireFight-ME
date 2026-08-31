@@ -5,10 +5,14 @@ extends Node3D
 @export var Drag : float
 @export var Cd : float
 @export var Bullet_Mass : float = 0.00362
+@export var Bullet_Diameter : float = 0.0056
 
 @export var BC_ig7 : float = 0.176
 @export var SD : float
 @export var ig7 :float
+
+@export var Cast : RayCast3D
+@export var Is_move : bool = true
 
 func CalcDrag(Cd: float, Density: float, Velocity: float, Area: float) -> float:
 	var Drag = Cd * Density * pow(Velocity, 2) * Area
@@ -35,21 +39,36 @@ func CalciG7(M: float) -> float:
 	else: return 0.0
 
 func _physics_process(delta: float) -> void:
+	if Is_move == false:
+		self.queue_free()
+	
+	if GlobalPlayerScript.Primary_Cast.is_colliding():
+		var prim_hit_obj =  GlobalPlayerScript.Primary_Cast.get_collider()
+		if self.global_position.distance_to(prim_hit_obj.global_position) < 50 :
+			print("Hit_Pos : " + str(prim_hit_obj.global_position) + "Hit obj : " + str(prim_hit_obj.get_class()))
+			self.queue_free()
+	
+	if Cast.is_colliding():
+		if self.global_position.distance_to(Cast.get_collider().global_position) < 400:
+			print(Cast.get_collision_point())
+		
 	
 	ig7 = SD / BC_ig7
 	
 	var M = Velocity.length() / 343.0
 	Cd = ig7*CalciG7(M)
 	
-	Drag = CalcDrag(Cd, 1.225, Velocity.length(), PI * pow(0.0056 / 2.0, 2))
+	Drag = CalcDrag(Cd, 1.225, Velocity.length(), PI * pow(Bullet_Diameter / 2.0, 2))
 	
 	var Deceleration = Drag / Bullet_Mass
 	
 	Velocity -= Velocity.normalized() * Deceleration * delta
 	
+	Velocity.y -= 9.8 * delta
+	
 	self.global_position += Velocity * delta
 	
-	self.global_position += Velocity*delta
+	#self.global_position += Velocity*delta # Idk why the actual fuck this is doubled.
 	
 	# -- Debug ----------------------------------------------
-	# print ("Drag is : ", Drag, "Speed is : ", "Mach", M)
+	#print ("Drag is : ", Drag, "Speed is : ", "Mach", M)
