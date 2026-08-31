@@ -40,18 +40,41 @@ func CalciG7(M: float) -> float:
 
 func _physics_process(delta: float) -> void:
 	if Is_move == false:
+		
 		self.queue_free()
+	
+	# MATH NOTE #
+	"""
+	So to get our target we get the object, information about it, and its distance.
+	If Time = Distance/Speed then the distance on detection divided by the speed gives
+	us the flight time. We create a timer to where it would likely hit and if so do something.
+	
+	"""
 	
 	if GlobalPlayerScript.Primary_Cast.is_colliding():
 		var prim_hit_obj =  GlobalPlayerScript.Primary_Cast.get_collider()
-		if self.global_position.distance_to(prim_hit_obj.global_position) < 50 :
-			print("Hit_Pos : " + str(prim_hit_obj.global_position) + "Hit obj : " + str(prim_hit_obj.get_class()))
-			self.queue_free()
+		var HitDist = self.global_position.distance_to(prim_hit_obj.global_position)
+		if HitDist < 400:
+			await get_tree().create_timer(HitDist/Velocity.length()*delta).timeout
+			if HitDist < 50 and prim_hit_obj:
+				print("Hit_Pos : " + str(prim_hit_obj.global_position) + "Hit obj : " + str(prim_hit_obj.get_class()) + "Name : " + prim_hit_obj.name)
+				if prim_hit_obj.has_method("DealDamageTS"):
+					prim_hit_obj.DealDamageTS(10)
+				
+				Is_move = false
 	
 	if Cast.is_colliding():
-		if self.global_position.distance_to(Cast.get_collider().global_position) < 400:
-			print(Cast.get_collision_point())
-		
+		var HitObj = Cast.get_collider()
+		var HitDist = self.global_position.distance_to(HitObj.global_position)
+		if HitDist < 400:
+			await get_tree().create_timer(HitDist/Velocity.length()*delta).timeout
+			if HitDist < 50 and HitObj:
+				print("Hit_Pos : " + str(HitObj.global_position) + "Hit obj : " + str(HitObj.get_class()) + "Name : " + HitObj.name)
+				
+				if HitObj.has_method("DealDamageTS"):
+					HitObj.DealDamageTS(10)
+				
+				Is_move = false
 	
 	ig7 = SD / BC_ig7
 	

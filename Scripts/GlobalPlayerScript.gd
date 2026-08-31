@@ -2,6 +2,7 @@ extends Node
 
 @export var PrimaryAmmoVelocity : int = -880 
 @export var PrimaryAmmoCount : int = 30
+@export var PrimaryAmmoCountMax : int = 30
 @export var PrimaryFireMode : int = 2
 @export var PrimaryAutoTimer : float = 0
 @export var PrimaryShouldFlowTimer : bool = true

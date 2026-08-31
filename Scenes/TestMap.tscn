@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cgsereadd0jwk"]
 
 [ext_resource type="PackedScene" uid="uid://x5y8yt60w57o" path="res://Scenes/Player.tscn" id="1_kvjmi"]
+[ext_resource type="Script" uid="uid://dtl87in6yg2cy" path="res://Scripts/Custom Debug/TargetWallClass.gd" id="1_xh66l"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xh66l"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -19,10 +20,10 @@ glow_enabled = true
 albedo_color = Color(0.2869912, 0.26728827, 0.15404394, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_00jar"]
-size = Vector2(100, 100)
+size = Vector2(100, 200)
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_kvjmi"]
-data = PackedVector3Array(50, 0, 50, -50, 0, 50, 50, 0, -50, -50, 0, 50, -50, 0, -50, 50, 0, -50)
+data = PackedVector3Array(50, 0, 100, -50, 0, 100, 50, 0, -100, -50, 0, 100, -50, 0, -100, 50, 0, -100)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_kvjmi"]
 size = Vector2(10, 10)
@@ -43,19 +44,20 @@ shadow_enabled = true
 material_override = SubResource("StandardMaterial3D_0314m")
 mesh = SubResource("PlaneMesh_00jar")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Ground" unique_id=1470807159]
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground" unique_id=1999911020]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D" unique_id=947455524]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D" unique_id=205621648]
 shape = SubResource("ConcavePolygonShape3D_kvjmi")
 
 [node name="Target Wall" type="MeshInstance3D" parent="." unique_id=1820702725]
-transform = Transform3D(1, 0, 0, 0, 0.70710677, -0.7071068, 0, 0.7071068, 0.70710677, 0, 3, -26)
+transform = Transform3D(1, 0, 0, 0, -2.9802322e-08, -1, 0, 1, -2.9802322e-08, 0, 3, -100)
 material_override = SubResource("StandardMaterial3D_0314m")
 mesh = SubResource("PlaneMesh_kvjmi")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Target Wall" unique_id=647063743]
+[node name="WallStaticBody3D" type="StaticBody3D" parent="Target Wall" unique_id=647063743]
+script = ExtResource("1_xh66l")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Target Wall/StaticBody3D" unique_id=1886692682]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Target Wall/WallStaticBody3D" unique_id=1886692682]
 shape = SubResource("ConcavePolygonShape3D_xh66l")
 
 [node name="Player" parent="." unique_id=957666492 instance=ExtResource("1_kvjmi")]

@@ -9,12 +9,24 @@ metallic_specular = 1.0
 
 [node name="Bullet" type="Node3D" unique_id=1557003049 node_paths=PackedStringArray("Cast")]
 script = ExtResource("1_jtqic")
+gravity = null
+Velocity = null
+Drag = null
+Cd = null
+Bullet_Mass = null
+Bullet_Diameter = null
+BC_ig7 = null
+SD = null
+ig7 = null
 Cast = NodePath("RayCast3D")
+Is_move = null
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=921394689]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_jtqic")
 use_collision = true
+collision_layer = 2
+collision_mask = 2
 radius = 0.006
 height = 0.027
 
