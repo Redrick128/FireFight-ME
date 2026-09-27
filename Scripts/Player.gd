@@ -1,3 +1,36 @@
+"""
+MIT License
+
+Copyright (c) 2023 LegionGames
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Modifications Copyright (c) 2026 Bitz (Redrick128)
+ALl modifications are sublicensed under CC BY 4.0.
+
+Summary of changes made by Bitz (Redrick128)
+
+- Integration of a State machine.
+- Integration with Game mechanics such as weapons.
+
+"""
+
 class_name Player # ahh yes rewrite because i want my own story. April 10 2026 Redrick.
 
 extends CharacterBody3D
@@ -29,10 +62,12 @@ var p_Is_mouse_visible : bool = false
 var gravity = 9.8
 
 @export_category("UI")
+@export var PrimaryAmmoCurve : Curve
 @export var TEMP_FPS_LABEL 		  : Label
 @export var AMMO_LABEL     		  : Label
 @export var FIRE_MODE      		  : Label
 @export var TEMP_BLOOD_AMMO_LABEL : Label
+@export var TEMP_AUTO_TIMER		  : Label
 
 # health
 @export_category("health")
@@ -45,13 +80,16 @@ var gravity = 9.8
 @export var GunObj : GunClass
 @export var SemiTimer : Timer
 
+@export_category("Animation")
+@export var AnimPlayer: AnimationPlayer
+
 func _ready():
 	
-	Engine.max_fps = 60
+	Engine.max_fps = 200
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	GlobalPlayerScript.Primary_Cast = $"Head/Camera3D/R_Hand/AKS-74/RayCast3D"
+	GlobalPlayerScript.Primary_Cast = $"Head/Camera3D/R_Hand/PrimaryWeapon/PrimaryCast"
 
 func _input(event: InputEvent) -> void:
 	if GlobalPlayerScript.MenuFocus == 0:
@@ -68,8 +106,12 @@ func _input(event: InputEvent) -> void:
 		
 		if GlobalPlayerScript.PrimaryFireMode == 2:
 			SemiTimer.stop()
-		
 		SemiTimer.stop()
+	
+	if Input.is_action_just_pressed("RMB"):
+		AnimPlayer.play("Aim_Down_Sight_AKS74")
+	elif Input.is_action_just_released("RMB"):
+		AnimPlayer.play_backwards("Aim_Down_Sight_AKS74")
 	
 	if Input.is_action_just_pressed("Escape"):
 		get_tree().quit()
@@ -79,15 +121,16 @@ func _input(event: InputEvent) -> void:
 		await get_tree().create_timer(4).timeout
 	
 	if Input.is_action_just_pressed("Switch Fire Mode"):
-		if GlobalPlayerScript.PrimaryFireMode == 1:
+		if GlobalPlayerScript.PrimaryFireMode > 0 and GlobalPlayerScript.PrimaryFireMode == 2:
+			GlobalPlayerScript.PrimaryFireMode = 1
+		elif GlobalPlayerScript.PrimaryFireMode > 0 and GlobalPlayerScript.PrimaryFireMode == 1:
 			GlobalPlayerScript.PrimaryFireMode = 2
 		else:
-			GlobalPlayerScript.PrimaryFireMode = 1
+			print(error_string(30) + " : DUUDE THE FIRE MODE GOT FUCKED UP HARD")
+		
+		print(GlobalPlayerScript.PrimaryFireMode)
 	
 	if Input.is_action_just_pressed("1"):
-		p_Is_mouse_visible = !p_Is_mouse_visible  # flip the boolean
-		Input.set_mouse_mode(
-			Input.MOUSE_MODE_VISIBLE if p_Is_mouse_visible else Input.MOUSE_MODE_CAPTURED)
 		if GlobalPlayerScript.MenuFocus == 0:
 			GlobalPlayerScript.MenuFocus = 1
 		else: GlobalPlayerScript.MenuFocus = 0
@@ -111,7 +154,15 @@ func _physics_process(delta):
 	
 	TEMP_BLOOD_AMMO_LABEL.text = "BLOOD : " + str(PlayerBloodAmount)
 	
-	AMMO_LABEL.text = "Ammo : " + str(GlobalPlayerScript.PrimaryAmmoCount) + "/30"
+	
+	AMMO_LABEL.text = str(GlobalPlayerScript.PrimaryAmmoCount)
+	
+	var AmmoDiff = float(GlobalPlayerScript.PrimaryAmmoCount)/float(GlobalPlayerScript.PrimaryAmmoCountMax)
+
+	if GlobalPlayerScript.PrimaryAmmoCount <= 0:
+		AMMO_LABEL.label_settings.font_color = Color.RED.lerp(Color.BLACK, float(sin(Time.get_ticks_msec() * 1.0 * 0.5 *delta)*0.75))
+	else:
+		AMMO_LABEL.label_settings.font_color = Color.RED.lerp(Color.WHITE, PrimaryAmmoCurve.sample(AmmoDiff))
 	
 	#-- FIRE MODE CODE ------------------------#
 	
@@ -122,7 +173,7 @@ func _physics_process(delta):
 	elif GlobalPlayerScript.PrimaryFireMode == 2:
 		FM = "Auto"
 	
-	FIRE_MODE.text = "FIRE MODE : " + str(FM)
+	FIRE_MODE.text = str(FM)
 	
 	#------------------------------------------#
 	
@@ -157,9 +208,14 @@ func _physics_process(delta):
 	var direction = (head.transform.basis * transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if is_on_floor() and GlobalPlayerScript.MenuFocus == 0:
 		if direction:
+			if speed == WALK_SPEED:
+				GlobalPlayerScript.PlayerMovementState="is_Walking"
+			elif speed == SPRINT_SPEED: GlobalPlayerScript.PlayerMovementState="is_Running"
+			else: GlobalPlayerScript.PlayerMovementState="is_Idle"
 			velocity.x = direction.x * speed
 			velocity.z = direction.z * speed
 		else:
+			GlobalPlayerScript.PlayerMovementState="is_Idle"
 			velocity.x = lerp(velocity.x, direction.x * speed, delta * 7.0)
 			velocity.z = lerp(velocity.z, direction.z * speed, delta * 7.0)
 	elif GlobalPlayerScript.MenuFocus == 0:
@@ -176,7 +232,8 @@ func _physics_process(delta):
 	#var target_fov = BASE_FOV + FOV_CHANGE * velocity_clamped
 	#camera.fov = lerp(camera.fov, target_fov, delta * 8.0)
 	
-	move_and_slide()
+	if GlobalPlayerScript.PlayerData[0] != "null_State":
+		move_and_slide()
 	
 	# Pain incoming
 	# DA Health And player punishment system

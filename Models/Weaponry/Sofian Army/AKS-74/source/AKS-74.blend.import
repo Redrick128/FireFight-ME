@@ -3,13 +3,12 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cm8xwvsqmf1xc"
-path="res://.godot/imported/AKS-74.blend-4ab129a35b26f2e560156343802a3aae.scn"
+uid="uid://c18redqc17vdj"
+valid=false
 
 [deps]
 
 source_file="res://Models/Weaponry/Sofian Army/AKS-74/source/AKS-74.blend"
-dest_files=["res://.godot/imported/AKS-74.blend-4ab129a35b26f2e560156343802a3aae.scn"]
 
 [params]
 
@@ -39,23 +38,14 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={
-"nodes": {
-"PATH:Camera": {
-"import/skip_import": true
-},
-"PATH:Point": {
-"import/skip_import": true
-}
-}
-}
+_subresources={}
 blender/nodes/visible=0
 blender/nodes/active_collection_only=false
 blender/nodes/punctual_lights=true
 blender/nodes/cameras=true
 blender/nodes/custom_properties=true
 blender/nodes/modifiers=1
-blender/meshes/vertex_colors=2
+blender/meshes/vertex_colors=1
 blender/meshes/uvs=true
 blender/meshes/normals=true
 blender/meshes/export_geometry_nodes_instances=false
@@ -69,4 +59,4 @@ blender/animation/limit_playback=true
 blender/animation/always_sample=true
 blender/animation/group_tracks=true
 gltf/naming_version=2
-gltf/texture_map_mode=0
+gltf/texture_map_mode=1

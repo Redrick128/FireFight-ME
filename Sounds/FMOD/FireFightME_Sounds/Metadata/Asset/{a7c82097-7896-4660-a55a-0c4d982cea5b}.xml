@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="EncodableAsset" id="{a7c82097-7896-4660-a55a-0c4d982cea5b}">
+		<property name="assetPath">
+			<value>Weapons/AK-74M/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bd5517eb-fc1a-4855-97cc-36e32d103056}</destination>
+		</relationship>
+	</object>
+</objects>

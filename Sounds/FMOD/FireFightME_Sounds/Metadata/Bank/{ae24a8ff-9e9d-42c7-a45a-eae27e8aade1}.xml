@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="Bank" id="{ae24a8ff-9e9d-42c7-a45a-eae27e8aade1}">
+		<property name="name">
+			<value>SofianUpperAsianBloc</value>
+		</property>
+		<relationship name="folder">
+			<destination>{6d87c68d-f7d1-4652-b950-702f370b7578}</destination>
+		</relationship>
+	</object>
+</objects>

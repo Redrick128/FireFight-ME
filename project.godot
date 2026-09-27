@@ -8,6 +8,10 @@
 
 config_version=5
 
+[Fmod]
+
+General/banks_path="res://Sounds/FMOD/Banks/Desktop"
+
 [application]
 
 config/name="Fire Fight ME"
@@ -18,6 +22,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GlobalPlayerScript="*uid://u1augn3h1dl8"
+FmodManager="*uid://cds10pm7hwn3p"
 
 [display]
 
@@ -27,6 +32,10 @@ window/vsync/vsync_mode=2
 
 version_control/plugin_name="GitPlugin"
 version_control/autoload_on_startup=true
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/fmod/plugin.cfg")
 
 [input]
 
@@ -87,7 +96,8 @@ LMB={
 }
 RMB={
 "deadzone": 0.2,
-"events": []
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":2,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
 }
 
 [physics]

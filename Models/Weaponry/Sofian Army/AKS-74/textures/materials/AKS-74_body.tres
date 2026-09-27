@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c7mmpqy0ab6mx"]
+
+[ext_resource type="Texture2D" uid="uid://dprq3j4cfm002" path="res://Models/Weaponry/Sofian Army/AKS-74/textures/AKS-74_body_Albedo.png" id="1_g44os"]
+[ext_resource type="Texture2D" uid="uid://d3sqjsw7j8pec" path="res://Models/Weaponry/Sofian Army/AKS-74/textures/AKS-74_body_Metalness.png" id="2_ydimt"]
+[ext_resource type="Texture2D" uid="uid://xr030w1r4kid" path="res://Models/Weaponry/Sofian Army/AKS-74/textures/AKS-74_body_Normal.png" id="3_ly416"]
+[ext_resource type="Texture2D" uid="uid://n5j5d36eo3mf" path="res://Models/Weaponry/Sofian Army/AKS-74/textures/AKS-74_body_Roughness.png" id="4_68jth"]
+
+[resource]
+albedo_texture = ExtResource("1_g44os")
+metallic = 1.0
+metallic_texture = ExtResource("2_ydimt")
+roughness_texture = ExtResource("4_68jth")
+normal_enabled = true
+normal_texture = ExtResource("3_ly416")

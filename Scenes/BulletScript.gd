@@ -49,32 +49,36 @@ func _physics_process(delta: float) -> void:
 	If Time = Distance/Speed then the distance on detection divided by the speed gives
 	us the flight time. We create a timer to where it would likely hit and if so do something.
 	
+	# BUT
+	* Ive noted the system makes a timer then checks for a distance below 25m which cannot be given
+	> that the timer already passed but its an okey safety net.
 	"""
 	
 	if GlobalPlayerScript.Primary_Cast.is_colliding():
 		var prim_hit_obj =  GlobalPlayerScript.Primary_Cast.get_collider()
 		var HitDist = self.global_position.distance_to(prim_hit_obj.global_position)
-		if HitDist < 400:
-			await get_tree().create_timer(HitDist/Velocity.length()*delta).timeout
-			if HitDist < 50 and prim_hit_obj:
-				print("Hit_Pos : " + str(prim_hit_obj.global_position) + "Hit obj : " + str(prim_hit_obj.get_class()) + "Name : " + prim_hit_obj.name)
+		if HitDist < 50:
+			await get_tree().create_timer(HitDist/Velocity.length()).timeout
+			if HitDist < 25 and prim_hit_obj:
+				print("Hit_Pos : " + str(prim_hit_obj.global_position) + "Hit obj : " + str(prim_hit_obj.get_class()) + "Name : " + prim_hit_obj.name + "Dist : " + str(Velocity))
 				if prim_hit_obj.has_method("DealDamageTS"):
-					prim_hit_obj.DealDamageTS(10)
+					prim_hit_obj.DealDamageTS(1000)
 				
 				Is_move = false
 	
 	if Cast.is_colliding():
 		var HitObj = Cast.get_collider()
-		var HitDist = self.global_position.distance_to(HitObj.global_position)
-		if HitDist < 400:
-			await get_tree().create_timer(HitDist/Velocity.length()*delta).timeout
-			if HitDist < 50 and HitObj:
-				print("Hit_Pos : " + str(HitObj.global_position) + "Hit obj : " + str(HitObj.get_class()) + "Name : " + HitObj.name)
-				
-				if HitObj.has_method("DealDamageTS"):
-					HitObj.DealDamageTS(10)
-				
-				Is_move = false
+		if HitObj:
+			var HitDist = self.global_position.distance_to(HitObj.global_position)
+			if HitDist and HitDist < 250:
+				await get_tree().create_timer(HitDist/Velocity.length()*delta).timeout
+				if HitDist < 50 and HitObj:
+					print("Hit_Pos : " + str(HitObj.global_position) + "Hit obj : " + str(HitObj.get_class()) + "Name : " + HitObj.name + "Dist : " + str(Velocity))
+					
+					if HitObj.has_method("DealDamageTS"):
+						HitObj.DealDamageTS(10)
+					
+					Is_move = false
 	
 	ig7 = SD / BC_ig7
 	
@@ -90,6 +94,10 @@ func _physics_process(delta: float) -> void:
 	Velocity.y -= 9.8 * delta
 	
 	self.global_position += Velocity * delta
+	
+	await get_tree().create_timer(45).timeout
+	self.queue_free()
+	
 	
 	#self.global_position += Velocity*delta # Idk why the actual fuck this is doubled.
 	

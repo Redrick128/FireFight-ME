@@ -21,7 +21,32 @@
 ## deadline is around 2035 or 10 years. I will try to make
 ## it work.
 
+#                NEW ADDITIONS
+## So its currently 9/27/2026. I have made a lot of stuff by
+## now since i made this README file.
+## Including:
+## - Fixed Bullet Balistics
+## - In the future a base for a health system
+## - FMOD Support
+## - Few basic animations such as ADS
+## - More to come in the future
+## Thats all from me and current AI use has been from research in
+## regards to the modulation of the colors when the ammo runs out,
+## use of FMOD along side a tutorial by ______,
+## understanding how to sublicence,
+## understanding my code and helping in debugging.
+##
+
+#                 FINAL REMARKS
+## I hope one may understand my use of AI may be acceptable for some
+## of you and i really think that human generated code or anything
+## is better but i just need a little help in development and
+## i have never made any assets or audio directly with ai. 
+
 #      DEV INFO AND OFFICIAL PLAY TESTERS
 ##     Bitz (Redrick128) - Lead single dev.
 
-##     Eumi#$%@ - First Designated Play tester.
+##     Eumiline (Freind *HAS NOTTESTED YET BECAUSE OF HARDWARE ISSUES)
+##     - First Designated Play tester
+
+# Made using FMOD Studio by Firelight Technologies Pty Ltd.

@@ -1,5 +1,24 @@
 [gd_scene format=3 uid="uid://ckv84q8bh7h4r"]
 
-[ext_resource type="PackedScene" uid="uid://cm8xwvsqmf1xc" path="res://Models/Weaponry/Sofian Army/AKS-74/source/AKS-74.blend" id="1_8psj7"]
+[ext_resource type="PackedScene" uid="uid://c5fnam3dr1i2k" path="res://Models/Weaponry/Sofian Army/AKS-74/source/AKS-74.fbx" id="1_8psj7"]
+[ext_resource type="Material" uid="uid://c7mmpqy0ab6mx" path="res://Models/Weaponry/Sofian Army/AKS-74/textures/materials/AKS-74_body.tres" id="2_gqfb7"]
+[ext_resource type="Texture2D" uid="uid://b7rwcpwr3gtd8" path="res://Models/Weaponry/Sofian Army/AKS-74/textures/furniture_2_Albedo.png" id="3_kmyln"]
+[ext_resource type="Texture2D" uid="uid://chi4y8uj0lroj" path="res://Models/Weaponry/Sofian Army/AKS-74/textures/furniture_2_Metalness.png" id="4_cdfwk"]
+[ext_resource type="Texture2D" uid="uid://ckm8hpto1lxfm" path="res://Models/Weaponry/Sofian Army/AKS-74/textures/furniture_2_Normal.png" id="5_f58w1"]
+[ext_resource type="Texture2D" uid="uid://badhirm1k6j2" path="res://Models/Weaponry/Sofian Army/AKS-74/textures/furniture_2_Roughness.png" id="6_vdkd1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vcdnc"]
+albedo_texture = ExtResource("3_kmyln")
+metallic = 1.0
+metallic_texture = ExtResource("4_cdfwk")
+roughness_texture = ExtResource("6_vdkd1")
+normal_enabled = true
+normal_texture = ExtResource("5_f58w1")
 
 [node name="AKS-74" unique_id=1361205909 instance=ExtResource("1_8psj7")]
+
+[node name="AKS-74_body" parent="." index="2" unique_id=1095417327]
+material_override = ExtResource("2_gqfb7")
+
+[node name="AK-74_wooden_furniture_001" parent="." index="3" unique_id=99075193]
+material_override = SubResource("StandardMaterial3D_vcdnc")

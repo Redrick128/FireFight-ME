@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="DataFile" id="{f0f64664-38ea-4e0b-8022-6e31a3b58fb6}">
+		<property name="assetPath">
+			<value>Weapons/AK-74M/AK-74U_single_fire.wav.import</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bd5517eb-fc1a-4855-97cc-36e32d103056}</destination>
+		</relationship>
+	</object>
+</objects>

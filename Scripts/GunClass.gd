@@ -5,6 +5,7 @@ extends Node
 @onready var BulletScene: PackedScene = preload("res://Scenes/BulletScene.tscn")
 @export var AmmoSpawn: Node3D
 @export var Bulletstorage: Node3D
+@export var FmodEmmiter : FmodEventEmitter3D
 
 var SD
 var BulletWeight: float = 0.00362
@@ -38,3 +39,4 @@ func Shoot():
 	Bullet.global_transform.basis = AmmoSpawn.global_transform.basis
 	
 	Bullet.Velocity = AmmoSpawn.global_transform.basis * Vector3(0, 0, GlobalPlayerScript.PrimaryAmmoVelocity)
+	FmodEmmiter.play_one_shot()
