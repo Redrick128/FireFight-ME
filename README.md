@@ -1,4 +1,4 @@
-#      Hello! Welcome to this random project.
+#    Hello! Welcome to this random project.
 ## I'm the lead dev "Bitz" but some might know me as red.
 
 #             About This Project
